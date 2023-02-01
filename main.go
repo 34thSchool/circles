@@ -3,7 +3,6 @@ package main
 import (
 	"image/color"
 	"log"
-	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -24,7 +23,9 @@ type game struct {
 }
 
 func (g *game) Layout(outWidth, outHeight int) (w, h int) { return screenWidth, screenHeight }
-func (g *game) Update() error                             { return nil }
+func (g *game) Update() error {
+	return nil
+}
 func (g *game) Draw(screen *ebiten.Image) {
 	DrawCircle(screen, g.c.xc, g.c.yc, g.c.r, g.c.c)
 }
@@ -41,8 +42,7 @@ func DrawCircle(img *ebiten.Image, xc, yc, r int, c color.Color) {
 
 	x1, y1 := 0, r
 	d := 2*(x1+1)*(x1+1) + y1*y1 + (y1-1)*(y1-1) - 2*r*r
-	xmax := (math.Sqrt(2) / float64(2)) * float64(r)
-	for x, y := x1, y1; float64(x) <= xmax; x++ {
+	for x, y := x1, y1; x <= y; x++ {
 		img.Set(xc+x, yc+y, c) // 2
 		img.Set(xc-x, yc+y, c) // 3
 		img.Set(xc+x, yc-y, c) // 7
