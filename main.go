@@ -3,6 +3,7 @@ package main
 import (
 	"image/color"
 	"log"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -37,9 +38,25 @@ func main() {
 }
 
 func DrawCircle(img *ebiten.Image, xc, yc, r int, c color.Color) {
-	img.Set(xc, yc, c)
-	img.Set(xc+r, yc, c)
-	img.Set(xc-r, yc, c)
-	img.Set(xc, yc+r, c)
-	img.Set(xc, yc-r, c)
+
+	x1, y1 := 0, r
+	d := 2*(x1+1)*(x1+1) + y1*y1 + (y1-1)*(y1-1) - 2*r*r
+	xmax := (math.Sqrt(2) / float64(2)) * float64(r)
+	for x, y := x1, y1; float64(x) <= xmax; x++ {
+		img.Set(xc+x, yc+y, c) // 2
+		img.Set(xc-x, yc+y, c) // 3
+		img.Set(xc+x, yc-y, c) // 7
+		img.Set(xc-x, yc-y, c) // 6
+		img.Set(xc+y, yc+x, c) // 1
+		img.Set(xc+y, yc-x, c) // 8
+		img.Set(xc-y, yc+x, c) // 4
+		img.Set(xc-y, yc-x, c) // 5
+
+		if d <= 0 {
+			d += 4*x + 6
+		} else {
+			d += 4*x - 4*y + 10
+			y--
+		}
+	}
 }
